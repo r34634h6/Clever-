@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as Tone from 'tone'
 import { useSynthesizer } from '../hooks/useSynthesizer'
 
 export const DrumMachine = () => {
@@ -8,15 +9,24 @@ export const DrumMachine = () => {
   const [hihatIntensity, setHihatIntensity] = useState(0.6)
   const [snareIntensity, setSnareIntensity] = useState(0.7)
 
-  const handlePlayKick = () => {
+  const handlePlayKick = async () => {
+    if (Tone.Destination.state === 'suspended') {
+      await Tone.start()
+    }
     playKick(60 * kickIntensity, 0.4)
   }
 
-  const handlePlayHihat = () => {
+  const handlePlayHihat = async () => {
+    if (Tone.Destination.state === 'suspended') {
+      await Tone.start()
+    }
     playHihat()
   }
 
-  const handlePlaySnare = () => {
+  const handlePlaySnare = async () => {
+    if (Tone.Destination.state === 'suspended') {
+      await Tone.start()
+    }
     playSnare()
   }
 

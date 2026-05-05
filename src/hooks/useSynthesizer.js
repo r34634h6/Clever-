@@ -8,57 +8,64 @@ export const useSynthesizer = () => {
 
   useEffect(() => {
     const initSynth = async () => {
-      await Tone.start()
+      try {
+        if (Tone.Destination.state === 'suspended') {
+          await Tone.start()
+        }
 
-      const synth = new Tone.PolySynth(Tone.Synth, {
-        oscillator: { type: 'triangle' },
-        envelope: {
-          attack: 0.005,
-          decay: 0.1,
-          sustain: 0.3,
-          release: 1,
-        },
-      }).toDestination()
+        const synth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: 'triangle' },
+          envelope: {
+            attack: 0.005,
+            decay: 0.1,
+            sustain: 0.3,
+            release: 1,
+          },
+        }).toDestination()
 
-      synthRef.current = synth
+        synthRef.current = synth
 
-      const kickDrum = new Tone.Synth({
-        oscillator: { type: 'sine' },
-        envelope: {
-          attack: 0.001,
-          decay: 0.4,
-          sustain: 0,
-          release: 0.1,
-        },
-      }).toDestination()
+        const kickDrum = new Tone.Synth({
+          oscillator: { type: 'sine' },
+          envelope: {
+            attack: 0.001,
+            decay: 0.4,
+            sustain: 0,
+            release: 0.1,
+          },
+        }).toDestination()
 
-      const hihat = new Tone.MetalSynth({
-        harmonicity: 12,
-        resonance: 1000,
-        envelope: {
-          attack: 0.001,
-          decay: 0.08,
-          release: 0,
-        },
-      }).toDestination()
+        const hihat = new Tone.MetalSynth({
+          harmonicity: 12,
+          resonance: 1000,
+          envelope: {
+            attack: 0.001,
+            decay: 0.08,
+            release: 0,
+          },
+        }).toDestination()
 
-      const clapSnare = new Tone.Synth({
-        oscillator: { type: 'sawtooth' },
-        envelope: {
-          attack: 0.001,
-          decay: 0.15,
-          sustain: 0,
-          release: 0.05,
-        },
-      }).toDestination()
+        const clapSnare = new Tone.Synth({
+          oscillator: { type: 'sawtooth' },
+          envelope: {
+            attack: 0.001,
+            decay: 0.15,
+            sustain: 0,
+            release: 0.05,
+          },
+        }).toDestination()
 
-      drumsRef.current = {
-        kick: kickDrum,
-        hihat: hihat,
-        snare: clapSnare,
+        drumsRef.current = {
+          kick: kickDrum,
+          hihat: hihat,
+          snare: clapSnare,
+        }
+
+        setIsInitialized(true)
+      } catch (error) {
+        console.error('Failed to initialize synthesizer:', error)
+        setIsInitialized(true)
       }
-
-      setIsInitialized(true)
     }
 
     initSynth()
